@@ -1,0 +1,7 @@
+{
+  "name": "Test Receipt",
+  "description": "Test case for simulator",
+  "icons": {
+    "128": "/receipt.png"
+  }
+}

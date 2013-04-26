@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Simulator Test Receipt</title>
+  <script defer>
+    function log (msg, err) {
+      document.body.innerHTML = '<p ' + (err ? 'style="color: red;"' : '') +
+      '>' + msg + '</p>';
+    };
+
+    function copy (obj) {
+      var ret = {};
+      var keys = [
+        'manifest',
+        'manifestURL',
+        'origin',
+        'installOrigin',
+        'installTime',
+        'receipts'
+      ];
+
+      keys.forEach(function each (key) {
+        ret[key] = obj[key];
+      });
+
+      return ret;
+    };
+
+    var request = navigator.mozApps.getSelf();
+    request.onerror = function err () {
+      log('getSelf Error', true);
+    };
+    request.onsuccess = function succ () {
+      if (!request.result) {
+        log('getSelf Success but no record', true);
+      } else {
+        log(JSON.stringify(copy(request.result), null, '<br/>'));
+      }
+    };
+  </script>
+</head>
+<body></body>
+</html>
