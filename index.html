@@ -3,28 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>Simulator Test Receipt</title>
+  <script src="https://raw.github.com/mozilla/receiptverifier/master/receiptverifier.js"></script>
   <script defer>
     function log (msg, err) {
       document.body.innerHTML = '<p ' + (err ? 'style="color: red;"' : '') +
       '>' + msg + '</p>';
-    };
-
-    function copy (obj) {
-      var ret = {};
-      var keys = [
-        'manifest',
-        'manifestURL',
-        'origin',
-        'installOrigin',
-        'installTime',
-        'receipts'
-      ];
-
-      keys.forEach(function each (key) {
-        ret[key] = obj[key];
-      });
-
-      return ret;
     };
 
     var request = navigator.mozApps.getSelf();
@@ -35,7 +18,22 @@
       if (!request.result) {
         log('getSelf Success but no record', true);
       } else {
-        log(JSON.stringify(copy(request.result), null, '<br/>'));
+        log('receipts: ' + JSON.stringify(request.result.receipts));
+        var verifier = new mozmarket.receipts.Verifier();
+        verifier.clearCache();
+        verifier.verify(function (verifier) {
+          var log = document.getElementsByTagName('p')[0];
+          // If valid make it green else red
+          if (verifier.state instanceof verifier.states.OK) {
+            log.style.color = 'green';
+          } else {
+            log.style.color = 'red';
+            console.log(verifier.state);
+          }
+        }, {
+          installs_allowed_from: '*',
+          typsAllowed: 'test-receipt'
+        });
       }
     };
   </script>

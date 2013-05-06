@@ -3,5 +3,6 @@
   "description": "Test case for simulator",
   "icons": {
     "128": "/receipt.png"
-  }
+  },
+  "launch_path": "index.html"
 }
