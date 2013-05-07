@@ -19,7 +19,12 @@
         log('getSelf Success but no record', true);
       } else {
         log('receipts: ' + JSON.stringify(request.result.receipts));
-        var verifier = new mozmarket.receipts.Verifier();
+        var verifier = new mozmarket.receipts.Verifier({
+          installs_allowed_from: '*',
+          typsAllowed: 'test-receipt',
+          logLevel: mozmarket.receipts.Verifier.levels.DEBUG,
+          onlog: mozmarket.receipts.Verifier.consoleLogger
+        });
         verifier.clearCache();
         verifier.verify(function (verifier) {
           var log = document.getElementsByTagName('p')[0];
@@ -30,9 +35,6 @@
             log.style.color = 'red';
             console.log(verifier.state);
           }
-        }, {
-          installs_allowed_from: '*',
-          typsAllowed: 'test-receipt'
         });
       }
     };
